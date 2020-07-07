@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
+import com.bagayugu.dummy.exception.ProductNotFoundException;
 import com.bagayugu.dummy.message.ProductDto;
 import com.bagayugu.dummy.mongo.model.Product;
 import com.bagayugu.dummy.mongo.repository.ProductRepository;
@@ -66,10 +67,11 @@ public class ProductService {
 				ResponseUtil.Code.SUCCESS);
 	}
 	
-	public DetailProductResponse update(String id, ProductRequest request) {
+	public DetailProductResponse update(String id, ProductRequest request) throws ProductNotFoundException{
 		Optional<Product> productOpt = productRepository.findById(id);
 		
-		if(!productOpt.isPresent()) return null;
+		if(!productOpt.isPresent())
+			throw new ProductNotFoundException("Product id-" + id +" not found");
 		
 		Product product = productOpt.get();
 		product.setName(request.getName());
@@ -92,10 +94,12 @@ public class ProductService {
 				ResponseUtil.Code.SUCCESS);
 	}
 	
-	public BaseResponse delete(String id) {
+	public BaseResponse delete(String id) throws ProductNotFoundException{
 		Optional<Product> productOpt = productRepository.findById(id);
 		
-		if(!productOpt.isPresent()) return null;
+		if(!productOpt.isPresent())
+			throw new ProductNotFoundException("Product id-" + id +" not found");
+		
         productRepository.delete(productOpt.get());
 
         Optional<ProductDto> dtoCache = redisProductRepository.findById(id);
@@ -109,7 +113,7 @@ public class ProductService {
 		return new BaseResponse(ResponseUtil.Message.SUCCESS, ResponseUtil.Code.SUCCESS);
 	}
 	
-	public DetailProductResponse findById(String id) {
+	public DetailProductResponse findById(String id) throws ProductNotFoundException{
 		ProductDto response = new ProductDto();
 
 		//Check Redis cache
@@ -117,7 +121,8 @@ public class ProductService {
 		if(!dtoCache.isPresent()) {
 			Optional<Product> productOpt = productRepository.findById(id);
 			
-			if(!productOpt.isPresent()) return null;
+			if(!productOpt.isPresent())
+				throw new ProductNotFoundException("Product id-" + id +" not found");
 			
 			Product product = productOpt.get();
 			response = ProductDto.builder()

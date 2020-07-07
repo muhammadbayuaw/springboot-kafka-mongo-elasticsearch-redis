@@ -1,5 +1,7 @@
 package com.bagayugu.dummy.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +34,7 @@ public class ProductController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<DetailProductResponse> save(@RequestBody ProductRequest request){
+	public ResponseEntity<DetailProductResponse> save(@Valid @RequestBody ProductRequest request){
 		DetailProductResponse response = productService.create(request);
 		return new ResponseEntity<DetailProductResponse>(response, HttpStatus.CREATED);
 	}

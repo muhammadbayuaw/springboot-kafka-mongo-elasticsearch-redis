@@ -28,6 +28,7 @@ Install all the application used above, and clone this source.
 
 
 ### Running the app
+Make sure all the applications above already run successfully before you run the source.
 
 There are 4 kind of properties used here. You won't be confused about those things since the name already represent its function.
 

@@ -1,6 +1,6 @@
-# Bayumart
+# Spring Boot + Apache Kafka + Mongo DB + Elasticsearch + Redis
 
-Dummy project Spring Boot + MongoDB + Elasticsearch + Redis + Apache Kafka.
+Dummy project that using those stack.
 
 ## System Overview
 
